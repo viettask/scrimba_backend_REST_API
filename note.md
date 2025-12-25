@@ -50,3 +50,17 @@ what do they want to give us, and what do want from us in return.
 
 And the request object makes various properties and methods available to us.
 And one we're going to use a lot is the URL
+
+5) HTTP is a text_based protocol
+All data transferred between the client and the server must be in the form of strings. 
+
+6) JSON.stringify(<data-to-convert>)
+
+7) When sending data, setting the Content-Types (Mime types)
+    - application/json
+    - text/html
+    - text/css 
+    - application/javascript 
+
+8) Add Path Parameters
+/api/continent/africa = filter on continent
