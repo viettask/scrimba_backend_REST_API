@@ -1,6 +1,7 @@
 import http from 'node:http'
 import { getDataFromDB } from './database/db.js'
 import { sendJSONResponse } from './utils/sendJSONResponse.js'
+import { getDataByPathParams } from './utils/getDataByPathParams.js'
 const PORT = 8000
 
 const animal = {
@@ -13,7 +14,18 @@ console.log(typeof JSON.stringify(animal))
 
 
 const server = http.createServer(async (req, res) => {
-    const destinations = await getDataFromDB()
+    /*
+    Challenge 10:
+    1. Complete the two lines of code below.
+    hint.md for help!
+    */
+    //Query pararams
+    const urlObj = new URL(req.url, `http://${req.headers.host}`)
+    const queryObj = Object.fromEntries(urlObj.searchParams)
+    console.log(queryObj)
+
+
+    const destinations = await getDataFromDB() 
 
     /*
 Challenge 1:
@@ -45,19 +57,46 @@ Only serve our string if it’s ‘/api’.
       2. Delete unnecessary code.
     */
 
+    /*
+    Challenge 9:
+    1. Create a util function to filter data.
+    2. Wire it up and delete unneeded code.
+    */
+
+    /*
+    Challenge 10:
+    1. Complete the two lines of code below.
+    hint.md for help!
+    */
+    // // Use the URL constructor and pass in the relative and base urls.
+    // const urlObj = new URL(req.url, `http://${req.headers.host}`) 
+
+
+    // // Use the fromEntries() method on the Object class .
+    // // What do you need to pass in? 
+    // const queryObj = Object.fromEntries(urlObj.searchParams)
+
+    // console.log(queryObj)
+
+
     // Challenge 1
     if (req.url === '/api' && req.method === 'GET') {
         // res.end('This is from the server','utf8', () => console.log('response end'))
         // res.setHeader('Content-Type', 'application/json')
         // res.statusCode= 200
         // res.end(JSON.stringify(destinations))
+        let filteredDestinations = destinations
+        console.log(queryObj)
+        //update filteredDestinations
+
         sendJSONResponse(res, 200, destinations)
     }
     else if (req.url.startsWith('/api/continent') && req.method === 'GET') {
         const continent = req.url.split('/').pop()
-        const filteredData = destinations.filter((destination) => {
-            return destination.continent.toLowerCase() === continent.toLowerCase()
-        })
+        // const filteredData = destinations.filter((destination) => {
+        //     return destination.continent.toLowerCase() === continent.toLowerCase()
+        // })
+        const filteredData = getDataByPathParams(destinations, 'continent', continent)
         // res.setHeader("Content-Type","application/json")
         // res.statusCode = 200
         // res.end(JSON.stringify(filteredData))
@@ -71,6 +110,21 @@ Only serve our string if it’s ‘/api’.
       (How can you get to what comes after the final slash?)
       (What method can you use to filter data?)
       */
+    }
+    else if (req.url.startsWith('/api/country') && req.method === 'GET') {
+        /*
+        Challenge 8:
+        1. Add an 'api/country/<country>' route.
+        */
+        const country = req.url.split('/').pop()
+        // const filteredData = destinations.filter((destination) => {
+        //     return destination.country.toLowerCase() === country.toLowerCase()
+        // })
+        const filteredData = getDataByPathParams(destinations, 'country', country)
+        // res.setHeader("Content-Type","application/json")
+        // res.statusCode = 200
+        // res.end(JSON.stringify(filteredData))
+        sendJSONResponse(res, 200, filteredData)
     }
     else {
         /*
@@ -86,7 +140,7 @@ Only serve our string if it’s ‘/api’.
             error: "not found",
             message: "The requested route does not exist"
         }))
-}
+    }
 
 })
 
