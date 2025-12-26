@@ -2,6 +2,7 @@ import http from 'node:http'
 import { getDataFromDB } from './database/db.js'
 import { sendJSONResponse } from './utils/sendJSONResponse.js'
 import { getDataByPathParams } from './utils/getDataByPathParams.js'
+import { getDataByQueryParams } from './utils/getDataByQueryParams.js'
 const PORT = 8000
 
 const animal = {
@@ -14,7 +15,11 @@ console.log(typeof JSON.stringify(animal))
 
 
 const server = http.createServer(async (req, res) => {
-    /*
+
+
+    const destinations = await getDataFromDB() 
+
+        /*
     Challenge 10:
     1. Complete the two lines of code below.
     hint.md for help!
@@ -24,8 +29,6 @@ const server = http.createServer(async (req, res) => {
     const queryObj = Object.fromEntries(urlObj.searchParams)
     console.log(queryObj)
 
-
-    const destinations = await getDataFromDB() 
 
     /*
 Challenge 1:
@@ -85,7 +88,8 @@ Only serve our string if it’s ‘/api’.
         // res.setHeader('Content-Type', 'application/json')
         // res.statusCode= 200
         // res.end(JSON.stringify(destinations))
-        let filteredDestinations = destinations
+        //let filteredDestinations = destinations
+        let filteredData = getDataByQueryParams(destinations, queryObj)
         console.log(queryObj)
         //update filteredDestinations
 
